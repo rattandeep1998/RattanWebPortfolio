@@ -14,7 +14,7 @@ const StyledLoader = styled.div`
   right: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--dark-navy);
+  background-color: var(--navy);
   z-index: 99;
 
   .logo-wrapper {
@@ -23,16 +23,25 @@ const StyledLoader = styled.div`
     transition: var(--transition);
     opacity: ${props => (props.isMounted ? 1 : 0)};
     svg {
-      display: block;
       width: 100%;
       height: 100%;
+      display: grid;
+      place-items: center;
       margin: 0 auto;
       fill: none;
       user-select: none;
-      #B {
-        opacity: 0;
-      }
     }
+  }
+
+  .logo-wrapper svg {
+    fill: var(--green);
+  }
+  .logo-wrapper svg path {
+    fill: var(--green);
+  }
+  #icon-loader path {
+    fill: var(--green);
+    stroke: var(--green);
   }
 `;
 
@@ -41,38 +50,51 @@ const Loader = ({ finishLoading }) => {
 
   const animate = () => {
     const loader = anime.timeline({
+      easing: 'easeInOutSine',
       complete: () => finishLoading(),
     });
 
     loader
-      .add({
-        targets: '#logo path',
-        delay: 300,
-        duration: 1500,
-        easing: 'easeInOutQuart',
-        strokeDashoffset: [anime.setDashoffset, 0],
-      })
-      .add({
-        targets: '#logo #B',
-        duration: 700,
-        easing: 'easeInOutQuart',
-        opacity: 1,
-      })
-      .add({
-        targets: '#logo',
-        delay: 500,
-        duration: 300,
-        easing: 'easeInOutQuart',
-        opacity: 0,
-        scale: 0.1,
-      })
-      .add({
-        targets: '.loader',
-        duration: 200,
-        easing: 'easeInOutQuart',
-        opacity: 0,
-        zIndex: -1,
-      });
+      .add({ targets: '.rect1', translateY: 54, duration: 500 })
+      .add({ targets: '.rect2', translateX: -54, duration: 500 }, 0)
+      .add({ targets: '.rect3', translateY: -54, duration: 500 }, 0)
+      .add({ targets: '.rect4', translateX: 54, duration: 500, endDelay: 200 }, 0);
+
+    loader.add({
+      targets: '#icon-loader',
+      duration: 500,
+      rotate: 135,
+      endDelay: 200,
+    });
+
+    loader
+      .add({ targets: '.rect2', translateX: 0, duration: 500 })
+      .add({ targets: '.rect4', translateX: 0, duration: 500, endDelay: 200 }, '-=500');
+
+    loader
+      .add({ targets: '.rect1', translateY: 0, duration: 500 })
+      .add({ targets: '.rect4', translateX: 54, duration: 500 }, '-=500');
+
+    loader
+      .add({ targets: '.rect3', translateY: 0, duration: 500 }, '-=500')
+      .add({ targets: '.rect2', translateX: -54, duration: 500, endDelay: 200 }, '-=500');
+
+    loader
+      .add({ targets: '.rect1', translateY: 54, duration: 500 })
+      .add({ targets: '.rect3', translateY: -54, duration: 500, endDelay: 200 }, '-=500');
+
+    loader.add({
+      targets: '#sixthSVG',
+      duration: 500,
+      rotate: 270,
+      endDelay: 200,
+    });
+
+    loader
+      .add({ targets: '.rect1', translateY: 0, duration: 500 })
+      .add({ targets: '.rect2', translateX: 0, duration: 500 }, '-=500')
+      .add({ targets: '.rect3', translateY: 0, duration: 500 }, '-=500')
+      .add({ targets: '.rect4', translateX: 0, duration: 500, endDelay: 200 }, '-=500');
   };
 
   useEffect(() => {
